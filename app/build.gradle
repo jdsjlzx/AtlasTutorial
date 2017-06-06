@@ -1,0 +1,133 @@
+group = 'com.xylife.trip'
+version = getEnvValue("versionName", "1.0.0");
+def apVersion = getEnvValue("apVersion", "");
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.taobao.atlas'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "com.xylife.trip"
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 1
+        versionName version
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("atlasdemo.jks")
+            storePassword "123456"
+            keyAlias "key"
+            keyPassword "123456"
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            zipAlignEnabled true
+            signingConfig signingConfigs.debug
+        }
+
+
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+
+
+    compile('com.taobao.android:atlas_core:5.0.7@aar') {
+        transitive = true
+    }
+    compile 'com.taobao.android:atlasupdate:1.1.4.7@aar'
+    compile 'com.alibaba:fastjson:1.1.45.android@jar'
+
+    compile project(':splashscreen')
+    compile project(':activitygroupcompat')
+    compile project(':commonlibrary')
+
+    bundleCompile project(':firstbundle')
+    bundleCompile project(':secondbundle')
+    bundleCompile project(':thirdbundle')
+    // 远程加载组件 不打包进apk
+    bundleCompile project(':remotebundle')
+}
+
+String getEnvValue(key, defValue) {
+    def val = System.getProperty(key);
+    if (null != val) {
+        return val;
+    }
+    val = System.getenv(key);
+    if (null != val) {
+        return val;
+    }
+    return defValue;
+}
+
+
+atlas {
+    atlasEnabled true
+    tBuildConfig {
+        autoStartBundles = ['com.xylife.firstbundle'] //自启动bundle配置
+        outOfApkBundles = ['remotebundle']
+        //preLaunch = 'com.taobao.demo.DemoPreLaunch'
+    }
+
+    manifestOptions{
+        addAtlasProxyComponents true
+    }
+
+    patchConfigs {
+        debug {
+            createTPatch true
+        }
+    }
+
+
+    buildTypes {
+        debug {
+            if (apVersion) {
+                // 打差异补丁 gradlew assembleDebug -DapVersion=1.1.0 -DversionName=1.1.1
+                // 对应着本地maven仓库地址 .m2/repository/com/xylife/trip/AP-debug/1.1.0/AP-debug-1.1.0.ap
+                baseApDependency "com.xylife.trip:AP-debug:${apVersion}@ap"
+                patchConfig patchConfigs.debug
+            }
+        }
+    }
+}
+
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+publishing {
+    // 指定仓库位置
+    repositories {
+        mavenLocal()
+    }
+    publications {
+        // 默认本地仓库地址  用户目录/.m2/repository/
+        maven(MavenPublication) {
+            artifact "${project.buildDir}/outputs/apk/${project.name}-debug.ap"
+            //生成本地maven目录
+            groupId group
+            artifactId "AP-debug"
+        }
+    }
+}
+
+

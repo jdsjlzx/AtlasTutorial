@@ -21,15 +21,15 @@ https://github.com/alibaba/atlas/tree/master/atlas-demo
 4、 app工程目录下执行../gradlew clean assembleDebug -DapVersion=apVersion -DversionName=newVersion,
     其中apVersion为之前打的完整apk的版本，newVersion为此次动态部署要生成的新的版本号
 
+    比如： ../gradlew clean assembleDebug -DapVersion=1.0.0 -DversionName=1.0.1
+
 需要注意的是：
 1. -DapVersion=apVersion -DversionName=newVersion 大小写不能出错，否则不能生成patch文件。
-2. 此方式目前只能更新app主模块的逻辑代码，不能修改app主模块的布局文件。（待验证）
-
 
 
 5、 检查build/output/tpatch-debug 目录下文件是否生成，然后执行下面的命令(以下为mac下的命令，windows请修改文件分隔符)
-    adb push build/outputs/tpatch-debug/update.json /sdcard/Android/data/com.taobao.demo/cache/update.json
-    adb push build/outputs/tpatch-debug/patch-*.tpatch /sdcard/Android/data/com.taobao.demo/cache
+    adb push build/outputs/tpatch-debug/update-1.0.0.json /sdcard/Android/data/com.xylife.trip/cache/update-1.0.0.json
+    adb push build/outputs/tpatch-debug/patch-1.0.1@1.0.0.tpatch /sdcard/Android/data/com.xylife.trip/cache
 
 点击动态部署页面红色按钮执行动态部署
 

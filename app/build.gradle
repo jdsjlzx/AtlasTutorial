@@ -14,6 +14,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName version
+        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {
@@ -50,10 +51,10 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
 
 
-    compile('com.taobao.android:atlas_core:5.0.7@aar') {
+    compile('com.taobao.android:atlas_core:5.0.7.11@aar') {
         transitive = true
     }
-    compile 'com.taobao.android:atlasupdate:1.1.4.7@aar'
+    compile 'com.taobao.android:atlasupdate:1.1.4.10@aar'
     compile 'com.alibaba:fastjson:1.1.45.android@jar'
 
     compile project(':splashscreen')
@@ -86,6 +87,7 @@ atlas {
         autoStartBundles = ['com.xylife.firstbundle'] //自启动bundle配置
         outOfApkBundles = ['remotebundle']
         //preLaunch = 'com.taobao.demo.DemoPreLaunch'
+        classInject false
     }
 
     manifestOptions{
@@ -106,6 +108,30 @@ atlas {
                 // 对应着本地maven仓库地址 .m2/repository/com/xylife/trip/AP-debug/1.1.0/AP-debug-1.1.0.ap
                 baseApDependency "com.xylife.trip:AP-debug:${apVersion}@ap"
                 patchConfig patchConfigs.debug
+            }
+        }
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.contains("DebugAndroidTest")) {
+        task.setEnabled(false);
+    }
+    if (task.name.contains("assemble")) {
+        def files = null;
+        def file = new File(task.project.getBuildDir(), "outputs");
+        if (file.exists() && new File(file, "tpatch-debug").exists()) {
+            files = new File(file, "tpatch-debug").listFiles();
+        }
+        if (files != null) {
+            for (File file1 : files) {
+                if (file1.getName().endsWith(".json") || file1.getName().endsWith(".tpatch")) {
+
+                    if (!new File(task.project.getRootDir(), "hisTpatch").exists()) {
+                        new File(task.project.getRootDir(), "hisTpatch").mkdirs();
+                    }
+                    org.apache.commons.io.FileUtils.copyFileToDirectory(file1, new File(task.project.getRootDir(), "hisTpatch"));
+                }
             }
         }
     }

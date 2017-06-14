@@ -24,14 +24,17 @@ https://github.com/alibaba/atlas/tree/master/atlas-demo
     比如： ../gradlew clean assembleDebug -DapVersion=1.0.0 -DversionName=1.0.1
 
 需要注意的是：
-1. -DapVersion=apVersion -DversionName=newVersion 大小写不能出错，否则不能生成patch文件。
-
+```
+-DapVersion=apVersion -DversionName=newVersion 大小写不能出错，否则不能生成patch文件。
+```
 
 5、 检查build/output/tpatch-debug 目录下文件是否生成，然后执行下面的命令(以下为mac下的命令，windows请修改文件分隔符)
+
+```
     adb push build/outputs/tpatch-debug/update-1.0.0.json /sdcard/Android/data/com.xylife.trip/cache/update-1.0.0.json
     adb push build/outputs/tpatch-debug/patch-1.0.1@1.0.0.tpatch /sdcard/Android/data/com.xylife.trip/cache
-
-点击动态部署页面红色按钮执行动态部署
+```
+点击动态部署按钮执行动态部署(本demo的动态部署按钮位于titlebar的左侧文字区域)
 
 6.单bundle调试（供线下调试使用，当只更改了单个bundle的代码时，无需对整个APP进行动态部署，可以一键进行单bundle的部署调试）
 
@@ -43,7 +46,7 @@ Error:Execution failed for task ':app:mergeDebugResources'. > Error: Java.util.c
 
 
 在gradle的android{ ... } 中加入这两句就可以了
-
+```groovy
 android {
     
    ......
@@ -53,9 +56,10 @@ android {
 
    ......
 }
+```groovy
 
 7. Execution failed for task ':app:prepareDebugAP'.
-
+```groovy
 buildTypes {
         debug {
             minifyEnabled false
@@ -68,10 +72,11 @@ buildTypes {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+```java
 
 8.bundle需要注意,gralde里面增加如下配置
 
+```java
 apply plugin: 'com.taobao.atlas.library'
 
 // 如果要修改资源文件动态更新Bundle需要添加
@@ -85,3 +90,4 @@ atlas {
         }
     }
 }
+```j

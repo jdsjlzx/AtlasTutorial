@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (menuId == R.id.navigation_notifications) {
-                        //switchToActivity("message", "com.xylife.thirdbundle.ThirdBundleActivity");
-                        switchToActivity("message", "com.xylife.firstbundle.UserInfoActivity");
+                        switchToActivity("message", "com.xylife.thirdbundle.ThirdBundleActivity");
+                        //switchToActivity("message", "com.xylife.firstbundle.UserInfoActivity");
                     }
 
                     return true;

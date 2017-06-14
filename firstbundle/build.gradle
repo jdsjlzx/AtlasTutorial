@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.taobao.atlas'
 
 atlas {
-    bundleConfig{
+    bundleConfig {
         awbBundle true
     }
     buildTypes {

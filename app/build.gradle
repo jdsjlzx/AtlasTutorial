@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId "com.xylife.trip"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 25
         versionCode 1
         versionName version
         vectorDrawables.useSupportLibrary = true
@@ -85,8 +85,8 @@ atlas {
     atlasEnabled true
     tBuildConfig {
         autoStartBundles = ['com.xylife.firstbundle'] //自启动bundle配置
-        outOfApkBundles = ['remotebundle']
-        //preLaunch = 'com.taobao.demo.DemoPreLaunch'
+        outOfApkBundles = ['remotebundle'] //不把bundle编译进APK，在客户端使用时下载后加载
+        preLaunch = 'com.xylife.trip.AppPreLaunch' //AppApplication启动之前调用
         classInject false
     }
 

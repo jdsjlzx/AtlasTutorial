@@ -1,8 +1,10 @@
 # 阿里Atlas淘宝动态组件化框架详细攻略
 
 官方详细文档：
+
 https://github.com/alibaba/atlas/tree/master/atlas-demo
 
+http://atlas.taobao.org/docs/
 
 如果自定义，DemoApplication不能丢掉。
 

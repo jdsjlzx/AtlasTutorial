@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="AtlasDemo New York"
+            android:text="Click to update"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             />

@@ -24,17 +24,42 @@ android {
             keyAlias "key"
             keyPassword "123456"
         }
+
+        release {
+            storeFile file("atlasdemo.jks")
+            storePassword "123456"
+            keyAlias "key"
+            keyPassword "123456"
+        }
     }
 
     buildTypes {
         debug {
             minifyEnabled false
+            shrinkResources false
             zipAlignEnabled true
             signingConfig signingConfigs.debug
         }
 
+        release {
+            shrinkResources false //去除无用资源
+            zipAlignEnabled true
+
+            signingConfig signingConfigs.release
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
 
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
 }
 
 dependencies {
@@ -87,7 +112,7 @@ atlas {
         autoStartBundles = ['com.xylife.firstbundle'] //自启动bundle配置
         outOfApkBundles = ['remotebundle'] //不把bundle编译进APK，在客户端使用时下载后加载
         preLaunch = 'com.xylife.trip.AppPreLaunch' //AppApplication启动之前调用
-        classInject false
+        classInject = false
     }
 
     manifestOptions{
@@ -96,6 +121,9 @@ atlas {
 
     patchConfigs {
         debug {
+            createTPatch true
+        }
+        release {
             createTPatch true
         }
     }
@@ -110,6 +138,13 @@ atlas {
                 patchConfig patchConfigs.debug
             }
         }
+        release {
+            if (apVersion) {
+                baseApDependency "com.xylife.trip:AP-release:${apVersion}@ap"
+                patchConfig patchConfigs.release
+            }
+        }
+
     }
 }
 
@@ -148,10 +183,11 @@ publishing {
     publications {
         // 默认本地仓库地址  用户目录/.m2/repository/
         maven(MavenPublication) {
-            artifact "${project.buildDir}/outputs/apk/${project.name}-debug.ap"
             //生成本地maven目录
             groupId group
-            artifactId "AP-debug"
+            artifact "${project.buildDir}/outputs/apk/${project.name}-release.ap"
+            artifactId "AP-release"
+
         }
     }
 }

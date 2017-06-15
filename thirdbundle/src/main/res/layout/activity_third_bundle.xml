@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="点我试试"
+        android:text="点我试试0000"
         android:textSize="18sp"
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="0dp"/>
